@@ -19,8 +19,17 @@
 
         <div class="api-section">
             <h2>API 1: Authentication</h2>
-            <p class="description">This endpoint is called automatically on page load with your credentials to get an access token.</p>
-            <div class="result-box" id="api1-result">Waiting for page load...</div>
+            <p class="description">Enter your mobile number and MPIN to authenticate and get an access token.</p>
+            <div class="input-group">
+                <label for="api1-phoneNumber">Phone Number:</label>
+                <input type="tel" id="api1-phoneNumber" placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+                <label for="api1-mpin">MPIN:</label>
+                <input type="text" id="api1-mpin" placeholder="1234" maxlength="4">
+            </div>
+            <button id="api1-btn" class="btn btn-primary">Authenticate</button>
+            <div class="result-box" id="api1-result">Enter credentials and click Authenticate</div>
         </div>
 
         <div class="api-section">

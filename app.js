@@ -16,10 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Update status
-        updateStatus('Initializing...', 'loading');
-
-        // Call API 1 on page load
-        await callAPI1();
+        updateStatus('Ready - Enter credentials to authenticate', '');
     } catch (error) {
         console.error('Initialization error:', error);
         updateStatus(`Error: ${error.message}`, 'error');
@@ -30,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Disable API 2 and API 3 buttons until authentication succeeds
     document.getElementById('api2-btn').disabled = true;
     document.getElementById('api3-btn').disabled = true;
+    document.getElementById('api1-btn').addEventListener('click', callAPI1);
     document.getElementById('api2-btn').addEventListener('click', callAPI2);
     document.getElementById('api3-btn').addEventListener('click', callAPI3);
     
@@ -37,21 +35,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     userId = null;
 });
 
-// API 1: Called on page load with phone and password to get access token
+// API 1: Authentication with mobile number and MPIN from HTML form
 async function callAPI1() {
     const resultElement = document.getElementById('api1-result');
+    const buttonElement = document.getElementById('api1-btn');
+    
+    // Get values from input fields
+    const phoneNumber = document.getElementById('api1-phoneNumber').value.trim();
+    const mpin = document.getElementById('api1-mpin').value.trim();
+
+    // Validate required fields
+    if (!phoneNumber || !mpin) {
+        updateResult(resultElement, 'Please enter phone number and MPIN', 'error');
+        return;
+    }
+
     updateResult(resultElement, 'Authenticating with API 1...', 'loading');
+    buttonElement.disabled = true;
 
     try {
-        // Build request body - use body from config if available, otherwise use phone/password
-        let requestBody;
-        if (apiConfig.api1.body) {
-            requestBody = apiConfig.api1.body;
-        } else {
-            requestBody = {
-                phone: apiConfig.api1.phone,
-                password: apiConfig.api1.password
-            };
+        // Build request body from form fields and config
+        const requestBody = {
+            phoneNumber: phoneNumber,
+            mpin: mpin
+        };
+        
+        // Add deviceId from config if available
+        if (apiConfig.api1.deviceId) {
+            requestBody.deviceId = apiConfig.api1.deviceId;
         }
 
         const response = await fetch(apiConfig.api1.url, {
@@ -105,6 +116,8 @@ async function callAPI1() {
         updateResult(resultElement, `Error: ${error.message}`, 'error');
         updateStatus('API 1: Error', 'error');
         accessToken = null;
+    } finally {
+        buttonElement.disabled = false;
     }
 }
 

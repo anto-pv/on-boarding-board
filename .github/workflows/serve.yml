@@ -29,22 +29,20 @@ jobs:
           cat > config.js << EOF
           const CONFIG = {
               api1: {
-                  url: '${{ secrets.BASE_URL }}',
+                  url: '${{ secrets.BASE_URL }}/auth/mpin/login',
                   method: 'POST',
                   body: {
-                    phoneNumber: '${{ secrets.PHONE_NUMBER }}',
-                    mpin: '${{ secrets.MPIN }}',
                     deviceId: '${{ secrets.DEVICE_ID }}'
                   },
                   headers: {}
               },
               api2: {
-                  url: '${{ secrets.BASE_URL }}',
+                  url: '${{ secrets.BASE_URL }}/brokers',
                   method: 'POST',
                   headers: {}
               },
               api3: {
-                  url: '${{ secrets.BASE_URL }}',
+                  url: '${{ secrets.BASE_URL }}/auth/mpin/setup',
                   method: 'POST',
                   headers: {}
               }
