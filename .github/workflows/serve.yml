@@ -31,9 +31,7 @@ jobs:
               api1: {
                   url: '${{ secrets.BASE_URL }}/auth/mpin/login',
                   method: 'POST',
-                  body: {
-                    deviceId: '${{ secrets.DEVICE_ID }}'
-                  },
+                  deviceId: '${{ secrets.DEVICE_ID }}',
                   headers: {}
               },
               api2: {
