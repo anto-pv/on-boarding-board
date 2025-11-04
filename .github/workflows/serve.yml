@@ -28,6 +28,7 @@ jobs:
         run: |
           cat > config.js << EOF
           const CONFIG = {
+              proxyUrl: '${{ secrets.PROXY_URL }}',
               api1: {
                   url: '${{ secrets.BASE_URL }}/auth/mpin/login',
                   method: 'POST',

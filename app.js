@@ -5,6 +5,30 @@ let accessToken = null;
 // Store userId after API2 response
 let userId = null;
 
+// Helper function to make API calls through proxy if configured
+async function fetchWithProxy(url, options) {
+    // If proxy is configured, route through it
+    if (apiConfig.proxyUrl && apiConfig.proxyUrl.trim() !== '') {
+        const proxyResponse = await fetch(apiConfig.proxyUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url: url,
+                method: options.method || 'POST',
+                headers: options.headers || {},
+                body: options.body ? JSON.parse(options.body) : undefined
+            })
+        });
+        return proxyResponse;
+    }
+    
+    // Otherwise, call API directly
+    return fetch(url, options);
+}
+
+
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -65,7 +89,7 @@ async function callAPI1() {
             requestBody.deviceId = apiConfig.api1.deviceId;
         }
 
-        const response = await fetch(apiConfig.api1.url, {
+        const response = await fetchWithProxy(apiConfig.api1.url, {
             method: apiConfig.api1.method || 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -156,7 +180,7 @@ async function callAPI2() {
             email: email
         };
 
-        const response = await fetch(apiConfig.api2.url, {
+        const response = await fetchWithProxy(apiConfig.api2.url, {
             method: apiConfig.api2.method || 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -234,7 +258,7 @@ async function callAPI3() {
             userId: userId
         };
 
-        const response = await fetch(apiConfig.api3.url, {
+        const response = await fetchWithProxy(apiConfig.api3.url, {
             method: apiConfig.api3.method || 'POST',
             headers: {
                 'Content-Type': 'application/json',
